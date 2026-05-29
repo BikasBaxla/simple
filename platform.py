@@ -122,49 +122,34 @@ class Player(pygame.sprite.Sprite):
         self.apply_gravity()
         self.move_and_collide()
         
+#LOad level from file
+def load_level(filename, tile_size = 40):
+    platforms = pygame.sprite.Group()
+    with open(filename, "r")as f:
+        rows = f.readlines()
+        
+    for row_index , row in enumerate(rows):
+        for col_index, title in enumerate(row.strip()):
+            x = col_index * tile_size
+            y = row_index * tile_size
+            
+            if title == "1":
+                platforms.add(Platform(x ,y, tile_size, tile_size))
+            if title == "2":
+                platforms.add(MovingPlatform(x, y, tile_size, tile_size, dx= 1, dy=0, distance = 200, speed = 2))
+            if title == "3":
+                platforms.add(MovingPlatform(x, y, tile_size, tile_size, dx = 0, dy=1, distance = 150, speed =2))
+                
+    return platforms    
 #---create level ---
-platforms = pygame.sprite.Group()
-
-#--Ground
-platforms.add(Platform(0, HEIGHT - 40, WIDTH , 40))
-
-# floating platform
-
-platforms.add(Platform(100,550,80,20))
-platforms.add(Platform(350,500,10,20))
-platforms.add(Platform(650,450,80,20))
-platforms.add(Platform(900,400,50,20))
-platforms.add(Platform(500,350,10,20))
-platforms.add(Platform(800,300,15,20))
-platforms.add(Platform(100,250,10,20))
-platforms.add(Platform(350,200,20,20))
-platforms.add(Platform(600,150,20,20))
-platforms.add(Platform(850,900,20,20))
-platforms.add(Platform(950,100,20,20))
-
-#moving platform
-platforms.add(MovingPlatform(100, 550, 180, 20, dx = 1, dy = 0, distance = 300, speed = 3))
-platforms.add(MovingPlatform(350, 500, 180, 20, dx = 0, dy = 1, distance = 200, speed = 2))
-
-
-platforms.add(MovingPlatform(850, 450, 80, 20, dx = 1, dy = 0, distance = 300, speed = 3))
-platforms.add(MovingPlatform(200, 550, 10, 20, dx = 0, dy = 1, distance = 200, speed = 2))
-
-
-platforms.add(MovingPlatform(600, 400, 50, 20, dx = 1, dy = 0, distance = 300, speed = 3))
-platforms.add(MovingPlatform(500, 350, 100, 20, dx = 0, dy = 1, distance = 200, speed = 2))
-
-
-platforms.add(MovingPlatform(800, 300, 150, 20, dx = 1, dy = 0, distance = 300, speed = 3))
-platforms.add(MovingPlatform(100, 250, 120, 20, dx = 0, dy = 1, distance = 200, speed = 2))
-
-
-
-player =Player(100, 100, platforms)
+platforms = load_level("level2.txt")
+player = Player(100, 100, platforms)
 
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 all_sprites.add(platforms)
+
+        
 
 #---Game loop---
 running = True 
